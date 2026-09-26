@@ -17,6 +17,9 @@ models:
       - name: last_name
         description: "Nom du client"
 
+      - name: customer_full_name
+        description: "Prénom et nom du client réunis dans une seule colonne"
+
       - name: email
         description: "Adresse e-mail du client"
         data_tests:

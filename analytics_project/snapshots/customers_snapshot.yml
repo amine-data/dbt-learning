@@ -1,0 +1,30 @@
+snapshots:
+  - name: customers_snapshot
+    relation: ref('stg_customers')
+    description: "Historique des modifications des clients"
+
+    config:
+      schema: snapshots
+      unique_key: customer_id
+      strategy: check
+
+      check_cols:
+        - first_name
+        - last_name
+        - email
+
+    columns:
+      - name: customer_id
+        data_tests:
+          - not_null
+
+      - name: dbt_scd_id
+        description: "Identifiant unique de chaque version historique"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: dbt_valid_from
+        description: "Début de validité de la version"
+        data_tests:
+          - not_null

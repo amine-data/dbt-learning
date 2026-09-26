@@ -1,0 +1,164 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Table finale contenant une ligne par client et ses indicateurs de commandes"
+
+    columns:
+      - name: customer_id
+        description: "Identifiant unique du client"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        description: "Prénom du client"
+
+      - name: last_name
+        description: "Nom du client"
+
+      - name: email
+        description: "Adresse e-mail du client"
+        data_tests:
+          - not_null
+
+      - name: created_at
+        description: "Date de création du client"
+        data_tests:
+          - not_null
+
+      - name: total_orders
+        description: "Nombre total de commandes du client"
+        data_tests:
+          - not_null
+
+      - name: completed_orders
+        description: "Nombre de commandes terminées du client"
+        data_tests:
+          - not_null
+
+      - name: completed_revenue
+        description: "Montant total des commandes terminées"
+        data_tests:
+          - not_null
+
+      - name: last_order_date
+        description: "Date de la dernière commande du client"
+
+        
+
+
+  - name: fct_orders
+    description: "Table de faits contenant une ligne par commande"
+
+    columns:
+      - name: order_id
+        description: "Identifiant unique de la commande"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        description: "Identifiant du client ayant passé la commande"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+
+      - name: order_date
+        description: "Date de la commande"
+        data_tests:
+          - not_null
+
+      - name: order_status
+        description: "Statut de la commande"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - completed
+                  - cancelled
+                  - pending
+
+      - name: amount
+        description: "Montant total de la commande"
+        data_tests:
+          - not_null
+
+      - name: completed_order_count
+        description: "Indicateur valant 1 pour une commande terminée et 0 sinon"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - 0
+                  - 1
+                quote: false
+
+      - name: completed_amount
+        description: "Montant de la commande lorsqu’elle est terminée, sinon 0"
+        data_tests:
+          - not_null
+
+
+  - name: orders_by_customer_jinja
+    description: "Résumé des commandes par client généré avec Jinja"
+
+    columns:
+      - name: customer_id
+        description: "Identifiant unique du client"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: total_orders
+        description: "Nombre total de commandes"
+        data_tests:
+          - not_null
+
+      - name: completed_orders
+        description: "Nombre de commandes terminées"
+        data_tests:
+          - not_null
+
+      - name: cancelled_orders
+        description: "Nombre de commandes annulées"
+        data_tests:
+          - not_null
+
+      - name: pending_orders
+        description: "Nombre de commandes en attente"
+        data_tests:
+          - not_null
+
+      - name: completed_amount
+        description: "Montant total des commandes terminées"
+        data_tests:
+          - not_null
+
+
+
+  - name: orders_amount_by_status_jinja
+    description: "Montants des commandes par client et par statut"
+
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+
+      - name: completed_amount
+        data_tests:
+          - not_null
+
+      - name: cancelled_amount
+        data_tests:
+          - not_null
+
+      - name: pending_amount
+        data_tests:
+          - not_null

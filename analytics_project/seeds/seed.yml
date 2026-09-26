@@ -1,0 +1,50 @@
+version: 2
+
+seeds:
+  - name: countries
+    description: "table de référence des pays et de leur région"
+
+
+    columns:
+       - name: country_code
+         description: "Code unique du pays"
+         data_tests:
+           - unique
+           - not_null
+
+       - name: country_name
+         description: "Nom du pays"
+         data_tests:
+           - unique
+           - not_null
+
+       - name: region
+         description: "Région géographique du pays"
+         data_tests:
+           - not_null
+           
+
+  - name: order_statuses
+    description: "Table de référence des statuts de commande"
+
+    columns:
+      - name: order_status
+        description: "Code technique du statut de la commande"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: status_label
+        description: "Libellé français du statut"
+        data_tests:
+          - not_null
+
+      - name: is_final
+        description: "Indique si le statut est définitif"
+        data_tests:
+          - not_null
+      
+
+
+    
+         

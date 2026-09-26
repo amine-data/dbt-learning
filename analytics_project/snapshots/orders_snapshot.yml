@@ -1,0 +1,33 @@
+snapshots:
+  - name: orders_snapshot
+    relation: ref('stg_orders')
+    description: "Historique des changements des commandes"
+
+    config:
+      schema: snapshots
+      unique_key: order_id
+      strategy: check
+
+      check_cols:
+        - order_status
+        - amount
+
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+
+      - name: order_status
+        data_tests:
+          - not_null
+
+      - name: dbt_scd_id
+        description: "Identifiant unique de chaque version historique"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: dbt_valid_from
+        description: "Date de début de validité de la version"
+        data_tests:
+          - not_null

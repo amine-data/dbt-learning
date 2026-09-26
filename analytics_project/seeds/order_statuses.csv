@@ -1,0 +1,4 @@
+order_status,status_label,is_final
+completed,Terminée,true
+cancelled,Annulée,true
+pending,En attente,false

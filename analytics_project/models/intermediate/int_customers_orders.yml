@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: int_customers_orders
+    description: "Modèle intermédiaire réunissant les clients et leurs indicateurs de commandes"
+
+    columns:
+      - name: customer_id
+        description: "Identifiant unique du client"
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+
+      - name: first_name
+        description: "Prénom du client"
+        data_tests:
+          - not_null
+
+      - name: last_name
+        description: "Nom du client"
+        data_tests:
+          - not_null
+
+      - name: email
+        description: "Adresse e-mail du client"
+        data_tests:
+          - not_null
+
+      - name: created_at
+        description: "Date de création du client"
+        data_tests:
+          - not_null
+
+      - name: total_orders
+        description: "Nombre total de commandes du client"
+        data_tests:
+          - not_null
+
+      - name: completed_orders
+        description: "Nombre de commandes terminées du client"
+        data_tests:
+          - not_null
+
+      - name: completed_revenue
+        description: "Montant total des commandes terminées"
+        data_tests:
+          - not_null
+
+      - name: last_order_date
+        description: "Date de la dernière commande du client, tous statuts confondus"

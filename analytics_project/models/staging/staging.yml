@@ -1,0 +1,70 @@
+version: 2
+
+models: 
+   - name: stg_customers
+     description: "Vue de staging contenant les données clients nettoyées"
+    
+     columns:
+       - name: customer_id
+         description: "Identifiant unique du client"
+         data_tests:
+           - unique
+           - not_null
+
+        
+       - name: first_name
+         description: "Prénom du cleint nettoyé avec TRIM"
+
+       - name: last_name
+         description: "Nom du client nettoyé avec TRIM"
+
+       - name: email
+         description: "Adresse e-mail nettoyée et convertie en minuscules"
+         data_tests:
+           - not_null
+
+       - name: created_at
+         description: "Date de création du client"
+         data_tests:
+           - not_null
+
+
+   - name: stg_orders
+     description: "Vue de staging contenant les commandes nettoyées"
+
+     columns: 
+      - name: order_id
+        description: "Identifiant unique de la commande"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        description: "Identifiant du client ayant passé la commande"
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+
+      - name: order_date
+        description: "Date de la commande"
+        data_tests:
+          - not_null
+
+      - name: order_status
+        description: "Statut normalisé de la commande"
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - completed
+                  - cancelled
+                  - pending
+
+      - name: amount
+        description: "Montant de la commande"
+        data_tests:
+          - not_null

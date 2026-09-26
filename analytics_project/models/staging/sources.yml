@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+   - name: raw_dbt_training
+     description: "Données brutes e-commerc utilisées pour la formation dbt"
+
+     database: dbt-learning-2026
+     schema: raw_dbt_training
+
+     tables:
+       - name: customers
+         description: "table brute contenant les clients"
+
+       - name: orders
+         description: "table brute contenant les commandes"

@@ -6,9 +6,11 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   parse:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
     steps:
@@ -47,3 +49,15 @@ jobs:
         env:
           DBT_PROFILES_DIR: ${{ runner.temp }}/dbt-profiles
         run: poetry run dbt parse
+
+      - name: S'authentifier auprès de Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/118410612917/locations/global/workloadIdentityPools/github-actions-dbt-ci/providers/github-actions
+          service_account: dbt-ci-runner@dbt-learning-2026.iam.gserviceaccount.com
+
+      - name: Construire et tester le projet dbt
+        working-directory: analytics_project
+        env:
+          DBT_PROFILES_DIR: ${{ runner.temp }}/dbt-profiles
+        run: poetry run dbt build

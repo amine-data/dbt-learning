@@ -1,0 +1,49 @@
+name: dbt CI
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v7
+
+      - name: Installer Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Installer Poetry
+        run: python -m pip install poetry==2.4.3
+
+      - name: Installer les dépendances
+        run: poetry install --no-interaction --no-ansi
+
+      - name: Créer un profil dbt temporaire
+        run: |
+          mkdir -p "$RUNNER_TEMP/dbt-profiles"
+          cat > "$RUNNER_TEMP/dbt-profiles/profiles.yml" <<'EOF'
+          analytics_project:
+            target: ci
+            outputs:
+              ci:
+                type: bigquery
+                method: oauth
+                project: dbt-learning-2026
+                dataset: dbt_ci
+                threads: 4
+                location: EU
+          EOF
+
+      - name: Vérifier le projet dbt
+        working-directory: analytics_project
+        env:
+          DBT_PROFILES_DIR: ${{ runner.temp }}/dbt-profiles
+        run: poetry run dbt parse
